@@ -1,145 +1,89 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Scissors, Dog, Star, Phone, MapPin, 
-  Download, CheckCircle2, ShoppingBag, 
-  History, User, PlusCircle, RotateCcw, 
-  BellRing, Heart 
+  Scissors, Dog, Star, Phone, 
+  Download, History, User, PlusCircle, 
+  RotateCcw, Bell, ArrowUpRight, Crown 
 } from 'lucide-react';
 
-export default function NexusGroomingApp() {
-  const [activeTab, setActiveTab] = useState('explore'); // explore | pets | history
-  const [showNotification, setShowNotification] = useState(false);
-
-  const businessName = process.env.NEXT_PUBLIC_BUSINESS_NAME || "Island Dog Pet Wash";
-  const brandColor = process.env.NEXT_PUBLIC_BRAND_COLOR || "#002b5b";
-
-  // Simulate a push notification after 3 seconds for the "Wow" factor
-  useEffect(() => {
-    const timer = setTimeout(() => setShowNotification(true), 3000);
-    return () => clearTimeout(timer);
-  }, []);
+export default function PremiumGroomingApp() {
+  const [activeTab, setActiveTab] = useState('explore');
+  const brandColor = process.env.NEXT_PUBLIC_BRAND_COLOR || "#38bdf8"; // Light sky for contrast
 
   return (
-    <div className="max-w-md mx-auto min-h-screen pb-32 relative shadow-2xl bg-white">
+    <div className="max-w-md mx-auto min-h-screen pb-36 relative bg-neutral-950 overflow-hidden">
       
-      {/* 1. PUSH NOTIFICATION SIMULATION */}
-      <AnimatePresence>
-        {showNotification && (
-          <motion.div 
-            initial={{ y: -100, opacity: 0 }}
-            animate={{ y: 20, opacity: 1 }}
-            exit={{ y: -100, opacity: 0 }}
-            className="fixed top-0 left-4 right-4 z-[100] bg-white/90 backdrop-blur-md border border-slate-200 p-4 rounded-3xl shadow-2xl flex items-center gap-4"
-          >
-            <div className="bg-sky-500 p-2 rounded-xl text-white">
-              <BellRing size={20} />
-            </div>
-            <div className="flex-1">
-              <p className="text-[10px] font-black uppercase text-sky-600">Grooming Reminder</p>
-              <p className="text-xs font-bold text-slate-800">It's been 6 weeks! Time for Fluffy's trim?</p>
-            </div>
-            <button onClick={() => setShowNotification(false)} className="text-slate-400 p-1">✕</button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* 2. HEADER DYNAMICS */}
-      <header className="p-8 pt-16 bg-white">
-        <div className="flex justify-between items-start">
-          <div>
-            <h1 className="text-2xl font-black uppercase tracking-tighter text-slate-900 leading-none">
-              {activeTab === 'explore' ? 'Services' : activeTab === 'pets' ? 'My Pets' : 'History'}
-            </h1>
-            <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mt-2">
-              {activeTab === 'explore' ? businessName : 'Welcome Back, Sarah'}
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <button className="bg-slate-100 p-3 rounded-2xl text-slate-600 active:scale-90 transition-all">
-              <Download size={20} />
-            </button>
-          </div>
+      {/* BACKGROUND DECOR (Subtle Glow) */}
+      <div className="absolute top-[-10%] left-[-10%] w-64 h-64 bg-sky-500/10 blur-[120px] rounded-full" />
+      
+      {/* HEADER */}
+      <header className="px-8 pt-16 pb-8 flex justify-between items-center relative z-10">
+        <div>
+          <h1 className="text-3xl font-medium tracking-tight text-white leading-none">
+            {activeTab === 'explore' ? 'Portal' : activeTab === 'pets' ? 'Family' : 'Vault'}
+          </h1>
+          <p className="text-neutral-500 text-[10px] font-bold uppercase tracking-[0.3em] mt-3">
+            {activeTab === 'explore' ? 'Nexus / Island Dog' : 'Client ID: 8821-S'}
+          </p>
+        </div>
+        <div className="h-12 w-12 rounded-2xl bg-neutral-900 border border-neutral-800 flex items-center justify-center text-neutral-400">
+          <Bell size={20} />
         </div>
       </header>
 
-      <main className="px-6">
+      <main className="px-6 relative z-10">
         <AnimatePresence mode="wait">
           
-          {/* TAB: EXPLORE (Service Menu) */}
+          {/* TAB: EXPLORE */}
           {activeTab === 'explore' && (
-            <motion.div key="explore" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
-              <div className="space-y-4">
-                <div className="bg-slate-50 rounded-[2.5rem] p-6 border border-slate-100">
-                   <h4 className="font-black text-slate-800 uppercase text-xs mb-4">Most Popular</h4>
-                   <div className="flex justify-between items-center bg-white p-4 rounded-3xl shadow-sm border border-slate-100">
-                     <div className="flex items-center gap-3">
-                       <span style={{ color: brandColor }} className="p-2 bg-slate-50 rounded-xl"><Scissors size={18}/></span>
-                       <div>
-                         <p className="font-bold text-sm text-slate-800">Full Spa Groom</p>
-                         <p className="text-[10px] text-slate-400 font-bold uppercase">From $65.00</p>
-                       </div>
-                     </div>
-                     <button style={{ backgroundColor: brandColor }} className="text-white text-[10px] font-black px-4 py-2 rounded-xl uppercase">Book</button>
-                   </div>
-                </div>
-
-                {/* LOYALTY CARD - The "Hook" */}
-                <section className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden">
-                  <Star className="absolute -right-4 -top-4 w-24 h-24 text-white/5 rotate-12" />
-                  <h4 className="text-[10px] font-black mb-4 uppercase tracking-[0.2em] text-white/60">Loyalty Rewards</h4>
-                  <div className="flex justify-between mb-2">
-                    {[...Array(6)].map((_, i) => (
-                      <div key={i} className={`w-10 h-10 rounded-full border-2 border-dashed flex items-center justify-center ${i < 4 ? 'bg-sky-500 border-sky-500' : 'border-white/20'}`}>
-                        {i < 4 ? <Star size={16} fill="white" /> : <span className="text-white/20 text-[10px]">{i+1}</span>}
-                      </div>
-                    ))}
+            <motion.div key="explore" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+              
+              {/* FEATURE CARD: BENTO STYLE */}
+              <div className="bg-neutral-900/50 backdrop-blur-md border border-white/5 p-6 rounded-[2rem] shadow-2xl">
+                <div className="flex justify-between items-start mb-10">
+                  <div className="p-3 bg-sky-500/10 rounded-2xl text-sky-400">
+                    <Crown size={24} />
                   </div>
-                  <p className="text-[10px] text-sky-400 font-black uppercase mt-4">2 more visits for a FREE wash!</p>
-                </section>
+                  <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest px-3 py-1 bg-neutral-800/50 rounded-full">
+                    Active Membership
+                  </span>
+                </div>
+                <h2 className="text-xl font-medium text-white mb-2">Exclusive Spa Care</h2>
+                <p className="text-neutral-400 text-sm leading-relaxed mb-6">
+                  Priority booking and climate-controlled suites for your pets.
+                </p>
+                <button style={{ backgroundColor: brandColor }} className="w-full py-4 rounded-2xl text-black font-bold text-xs uppercase tracking-widest active:scale-95 transition-all">
+                  Book Priority Slot
+                </button>
+              </div>
+
+              {/* SERVICE LIST */}
+              <div className="grid grid-cols-1 gap-3">
+                <ServiceRow icon={<Scissors size={18}/>} title="Signature Cut" price="$85" />
+                <ServiceRow icon={<Dog size={18}/>} title="Essential Wash" price="$45" />
               </div>
             </motion.div>
           )}
 
-          {/* TAB: PETS (Profiles) */}
-          {activeTab === 'pets' && (
-            <motion.div key="pets" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
-              <div className="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 flex items-center gap-4">
-                <div className="w-16 h-16 bg-slate-200 rounded-3xl overflow-hidden">
-                   <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=200" alt="Pet" className="object-cover h-full" />
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-black text-slate-800 uppercase tracking-tighter">Fluffy</h4>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Golden Retriever • 3 Years</p>
-                  <div className="flex gap-2 mt-2">
-                    <span className="text-[8px] bg-red-50 text-red-600 px-2 py-1 rounded-lg font-black uppercase">Dryer Nervous</span>
-                  </div>
-                </div>
-              </div>
-              <button className="w-full py-5 border-2 border-dashed border-slate-100 rounded-[2.5rem] text-slate-300 font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2">
-                <PlusCircle size={16} /> Add New Pet Profile
-              </button>
-            </motion.div>
-          )}
-
-          {/* TAB: HISTORY (Rebooking) */}
+          {/* TAB: HISTORY */}
           {activeTab === 'history' && (
-            <motion.div key="history" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
-              <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 italic">Last Visit: Jan 12</p>
-                    <h4 className="font-black text-slate-800 uppercase tracking-tighter text-lg">Full Spa Grooming</h4>
-                    <p className="text-[10px] text-slate-500 font-medium">Pet: Fluffy • Groomer: Jessica</p>
+            <motion.div key="history" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+              <div className="bg-neutral-900/80 border border-white/5 p-8 rounded-[2.5rem]">
+                <div className="flex justify-between items-start mb-8">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-neutral-800 rounded-2xl flex items-center justify-center">
+                      <RotateCcw size={20} className="text-neutral-400" />
+                    </div>
+                    <div>
+                      <p className="text-white font-medium">Full Spa Groom</p>
+                      <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest mt-1">Jan 12 • Jessica</p>
+                    </div>
                   </div>
-                  <span style={{ color: brandColor }} className="font-black text-lg">$65</span>
+                  <span className="text-white font-medium">$65</span>
                 </div>
-                <button 
-                  style={{ backgroundColor: `${brandColor}15`, color: brandColor }}
-                  className="w-full py-4 rounded-2xl font-black text-[10px] flex items-center justify-center gap-2 uppercase tracking-[0.2em] active:scale-95 transition-all"
-                >
-                  <RotateCcw size={14} /> Rebook This Service
+                <button className="w-full py-4 bg-white text-black rounded-2xl font-bold text-[10px] uppercase tracking-widest hover:bg-neutral-200 transition-colors">
+                  Repeat Previous Service
                 </button>
               </div>
             </motion.div>
@@ -148,27 +92,38 @@ export default function NexusGroomingApp() {
         </AnimatePresence>
       </main>
 
-      {/* 3. NEW NATIVE TAB BAR */}
-      <nav className="fixed bottom-8 left-6 right-6 z-50">
-        <div className="bg-slate-900 shadow-2xl rounded-full p-2 flex justify-between items-center border border-white/10">
-          <NavButton active={activeTab === 'explore'} icon={<ShoppingBag size={20}/>} label="Shop" onClick={() => setActiveTab('explore')} />
-          <NavButton active={activeTab === 'pets'} icon={<Dog size={20}/>} label="Pets" onClick={() => setActiveTab('pets')} />
-          <NavButton active={activeTab === 'history'} icon={<History size={20}/>} label="History" onClick={() => setActiveTab('history')} />
+      {/* PREMIUM FLOATING TAB BAR */}
+      <nav className="fixed bottom-10 left-8 right-8 z-50">
+        <div className="bg-neutral-900/90 backdrop-blur-2xl border border-white/10 rounded-full p-2 flex justify-between items-center shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+          <TabBtn active={activeTab === 'explore'} icon={<PlusCircle size={20}/>} label="Explore" onClick={() => setActiveTab('explore')} />
+          <TabBtn active={activeTab === 'history'} icon={<History size={20}/>} label="Vault" onClick={() => setActiveTab('history')} />
+          <TabBtn active={activeTab === 'pets'} icon={<User size={20}/>} label="Profile" onClick={() => setActiveTab('pets')} />
         </div>
       </nav>
     </div>
   );
 }
 
-// Reusable Sub-component for Navigation
-function NavButton({ active, icon, label, onClick }: any) {
+function ServiceRow({ icon, title, price }: any) {
   return (
-    <button 
-      onClick={onClick} 
-      className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${active ? 'bg-white text-slate-900 shadow-xl' : 'text-slate-500'}`}
-    >
+    <div className="flex justify-between items-center p-5 bg-neutral-900/30 border border-white/5 rounded-3xl hover:bg-neutral-900/50 transition-all group">
+      <div className="flex items-center gap-4">
+        <span className="text-neutral-500 group-hover:text-white transition-colors">{icon}</span>
+        <span className="text-sm font-medium text-neutral-300">{title}</span>
+      </div>
+      <div className="flex items-center gap-3">
+        <span className="text-sm font-medium text-neutral-400">{price}</span>
+        <ArrowUpRight size={14} className="text-neutral-600" />
+      </div>
+    </div>
+  );
+}
+
+function TabBtn({ active, icon, label, onClick }: any) {
+  return (
+    <button onClick={onClick} className={`flex items-center gap-2 px-6 py-4 rounded-full transition-all duration-500 ${active ? 'bg-white text-black' : 'text-neutral-500'}`}>
       {icon}
-      {active && <span className="text-[10px] font-black uppercase tracking-widest leading-none">{label}</span>}
+      {active && <span className="text-[10px] font-bold uppercase tracking-widest leading-none">{label}</span>}
     </button>
   );
 }
