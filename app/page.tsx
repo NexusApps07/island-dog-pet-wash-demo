@@ -101,52 +101,63 @@ export default function NexusAgencyDemo() {
         </div>
       </header>
 
-      {/* 2. Services Grid */}
-      <main className="p-6">
-        <h3 className="text-lg font-black uppercase tracking-tight text-slate-800 mb-6 px-1">Professional Services</h3>
-        <div className="space-y-6">
-          {services.map((service, i) => (
-            <motion.div 
-              key={i}
-              whileTap={{ scale: 0.97 }}
-              className="bg-white rounded-[2.5rem] overflow-hidden shadow-sm border border-slate-100 flex flex-col"
-            >
-              <img src={service.image} className="h-40 w-full object-cover" alt={service.title} />
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-2">
-                  <div className="flex items-center gap-2">
-                    <span 
-                      style={{ color: brandColor, backgroundColor: `${brandColor}15` }}
-                      className="p-2 rounded-xl"
-                    >
-                      {service.icon}
-                    </span>
-                    <h4 className="font-bold text-slate-800">{service.title}</h4>
-                  </div>
-                  <span style={{ color: brandColor }} className="font-black tracking-tighter">
-                    {service.price}
-                  </span>
-                </div>
-                <p className="text-slate-500 text-sm leading-relaxed">{service.desc}</p>
-              </div>
-            </motion.div>
-          ))}
+      // 2. The Service Chart (Professional List View)
+<main className="p-6">
+  <div className="flex justify-between items-end mb-6 px-1">
+    <div>
+      <h3 className="text-lg font-black uppercase tracking-tight text-slate-800">Service Menu</h3>
+      <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Select to view details</p>
+    </div>
+    <span style={{ color: brandColor }} className="text-xs font-bold bg-slate-100 px-3 py-1 rounded-full uppercase">
+      Fixed Rates
+    </span>
+  </div>
+
+  <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+    {services.map((service, i) => (
+      <motion.div 
+        key={i}
+        whileTap={{ scale: 0.98 }}
+        className={`p-6 flex items-center justify-between ${i !== services.length - 1 ? 'border-b border-slate-50' : ''}`}
+      >
+        <div className="flex items-center gap-4">
+          {/* Automatic Numbering: 01, 02, etc. */}
+          <span className="text-2xl font-black opacity-10 italic">
+            {(i + 1).toString().padStart(2, '0')}
+          </span>
+          
+          <div>
+            <h4 className="font-bold text-slate-800 leading-none mb-1">{service.title}</h4>
+            <p className="text-slate-400 text-xs font-medium">{service.desc.substring(0, 35)}...</p>
+          </div>
         </div>
 
-        {/* 3. Dynamic Promise Section */}
-        <section 
-          style={{ backgroundColor: brandColor }}
-          className="mt-10 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-xl"
-        >
-          <Heart className="absolute -top-6 -right-6 text-white/10 w-32 h-32" />
-          <h4 className="text-lg font-black mb-4 flex items-center gap-2">
-            <CheckCircle2 size={24} /> OUR GENTLE PROMISE
-          </h4>
-          <p className="text-white/90 text-sm leading-relaxed font-medium">
-            {promiseText}
-          </p>
-        </section>
-      </main>
+        <div className="text-right">
+          <span 
+            style={{ backgroundColor: `${brandColor}15`, color: brandColor }} 
+            className="text-sm font-black px-3 py-2 rounded-2xl"
+          >
+            {service.price}
+          </span>
+        </div>
+      </motion.div>
+    ))}
+  </div>
+
+  {/* 3. The Promise Section (Stays the same) */}
+  <section 
+    style={{ backgroundColor: brandColor }}
+    className="mt-8 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-xl"
+  >
+    <Heart className="absolute -top-6 -right-6 text-white/10 w-32 h-32" />
+    <h4 className="text-lg font-black mb-4 flex items-center gap-2 uppercase tracking-tighter">
+      <CheckCircle2 size={24} /> The {businessName} Guarantee
+    </h4>
+    <p className="text-white/90 text-sm leading-relaxed font-medium">
+      {promiseText}
+    </p>
+  </section>
+</main>
 
       {/* 4. Sticky Mobile Bar */}
       <nav className="fixed bottom-6 left-6 right-6 z-50">
