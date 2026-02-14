@@ -1,172 +1,174 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Scissors, Dog, Cat, Star, Phone, MapPin, Download, CheckCircle2, ShoppingBag } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Scissors, Dog, Star, Phone, MapPin, 
+  Download, CheckCircle2, ShoppingBag, 
+  History, User, PlusCircle, RotateCcw, 
+  BellRing, Heart 
+} from 'lucide-react';
 
-export default function IslandDogBespokeDemo() {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+export default function NexusGroomingApp() {
+  const [activeTab, setActiveTab] = useState('explore'); // explore | pets | history
+  const [showNotification, setShowNotification] = useState(false);
 
-  // --- DYNAMIC DATA SYNCED WITH ISLANDDOGPETWASH.COM ---
-  const businessName = process.env.NEXT_PUBLIC_BUSINESS_NAME || "Island Dog Pet Wash & Market";
-  const locationText = process.env.NEXT_PUBLIC_LOCATION || "West Ashley, Charleston, SC";
-  const brandColor = process.env.NEXT_PUBLIC_BRAND_COLOR || "#002b5b"; // Their official Navy Blue
-  const heroImageUrl = process.env.NEXT_PUBLIC_HERO_IMAGE || "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?q=80&w=1000";
+  const businessName = process.env.NEXT_PUBLIC_BUSINESS_NAME || "Island Dog Pet Wash";
+  const brandColor = process.env.NEXT_PUBLIC_BRAND_COLOR || "#002b5b";
 
+  // Simulate a push notification after 3 seconds for the "Wow" factor
   useEffect(() => {
-    document.title = `${businessName} | Charleston's Premier Dog Wash`;
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-    });
-  }, [businessName]);
-
-  const handleInstall = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') setDeferredPrompt(null);
-    } else {
-      alert("To install: Tap 'Share' then 'Add to Home Screen' 📲");
-    }
-  };
-
-  // Services exactly as listed on their official site
-  const services = [
-    {
-      title: "You Wash (Self-Service)",
-      price: "$15+",
-      desc: "State-of-the-art tubs & shampoos. You wash, we clean up!",
-      icon: <Dog size={20} />
-    },
-    {
-      title: "We Wash (Full-Service)",
-      price: "By Size",
-      desc: "We wash and dry while you run errands. Reservation recommended.",
-      icon: <CheckCircle2 size={20} />
-    },
-    {
-      title: "Professional Grooming",
-      price: "Quote",
-      desc: "Full-service grooming by our expert staff. Call to schedule.",
-      icon: <Scissors size={20} />
-    },
-    {
-      title: "Natural Pet Market",
-      price: "Market",
-      desc: "Holistic foods, treats, and toys for your Low Country dog.",
-      icon: <ShoppingBag size={20} />
-    }
-  ];
+    const timer = setTimeout(() => setShowNotification(true), 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <div className="max-w-md mx-auto bg-slate-50 min-h-screen pb-32 font-sans antialiased text-slate-900">
+    <div className="max-w-md mx-auto min-h-screen pb-32 relative shadow-2xl bg-white">
       
-      {/* 1. Hero Section with Brand Navy */}
-      <header className="relative h-80 rounded-b-[3.5rem] overflow-hidden shadow-2xl">
-        <img 
-          src={heroImageUrl} 
-          className="absolute inset-0 w-full h-full object-cover brightness-75"
-          alt={businessName}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/10" />
-        
-        <div className="relative z-10 p-8 h-full flex flex-col justify-between">
-          <div className="flex justify-between items-start">
-            <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }}>
-              <h1 className="text-2xl font-black italic tracking-tighter text-white uppercase leading-none drop-shadow-lg">
-                ISLAND DOG
-              </h1>
-              <p className="text-white/90 text-[10px] font-bold tracking-[0.3em] uppercase mt-2 bg-black/30 backdrop-blur-sm inline-block px-2 py-1 rounded">
-                {locationText}
-              </p>
-            </motion.div>
-            <button onClick={handleInstall} className="bg-white/20 backdrop-blur-md p-3 rounded-2xl text-white">
-              <Download size={22} />
+      {/* 1. PUSH NOTIFICATION SIMULATION */}
+      <AnimatePresence>
+        {showNotification && (
+          <motion.div 
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 20, opacity: 1 }}
+            exit={{ y: -100, opacity: 0 }}
+            className="fixed top-0 left-4 right-4 z-[100] bg-white/90 backdrop-blur-md border border-slate-200 p-4 rounded-3xl shadow-2xl flex items-center gap-4"
+          >
+            <div className="bg-sky-500 p-2 rounded-xl text-white">
+              <BellRing size={20} />
+            </div>
+            <div className="flex-1">
+              <p className="text-[10px] font-black uppercase text-sky-600">Grooming Reminder</p>
+              <p className="text-xs font-bold text-slate-800">It's been 6 weeks! Time for Fluffy's trim?</p>
+            </div>
+            <button onClick={() => setShowNotification(false)} className="text-slate-400 p-1">✕</button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 2. HEADER DYNAMICS */}
+      <header className="p-8 pt-16 bg-white">
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-2xl font-black uppercase tracking-tighter text-slate-900 leading-none">
+              {activeTab === 'explore' ? 'Services' : activeTab === 'pets' ? 'My Pets' : 'History'}
+            </h1>
+            <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mt-2">
+              {activeTab === 'explore' ? businessName : 'Welcome Back, Sarah'}
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <button className="bg-slate-100 p-3 rounded-2xl text-slate-600 active:scale-90 transition-all">
+              <Download size={20} />
             </button>
           </div>
-
-          <motion.div 
-            initial={{ y: 20, opacity: 0 }} 
-            animate={{ y: 0, opacity: 1 }}
-            className="bg-white/10 backdrop-blur-xl border border-white/20 p-5 rounded-3xl"
-          >
-            <div className="flex items-center gap-2 mb-1">
-              {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="#fbbf24" className="text-yellow-400" />)}
-              <span className="text-white text-xs font-bold ml-1">Best of Charleston Winner</span>
-            </div>
-            <h2 className="text-xl font-extrabold text-white leading-tight">Charleston's Premier Pet Wash & Market</h2>
-          </motion.div>
         </div>
       </header>
 
-      {/* 2. Numbered Service Chart */}
-      <main className="p-6">
-        <div className="flex justify-between items-end mb-6 px-1">
-          <h3 className="text-lg font-black uppercase tracking-tight text-slate-800">Service Menu</h3>
-          <span style={{ color: brandColor }} className="text-[10px] font-black tracking-widest uppercase">West Ashley</span>
-        </div>
-
-        <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden mb-8">
-          {services.map((service, i) => (
-            <motion.div 
-              key={i}
-              whileTap={{ scale: 0.98 }}
-              className={`p-6 flex items-center justify-between ${i !== services.length - 1 ? 'border-b border-slate-50' : ''}`}
-            >
-              <div className="flex items-center gap-4">
-                <span className="text-2xl font-black opacity-10 italic">
-                  {(i + 1).toString().padStart(2, '0')}
-                </span>
-                <div>
-                  <h4 className="font-bold text-slate-800 leading-none mb-1">{service.title}</h4>
-                  <p className="text-slate-400 text-[10px] font-medium uppercase tracking-tight">{service.desc}</p>
+      <main className="px-6">
+        <AnimatePresence mode="wait">
+          
+          {/* TAB: EXPLORE (Service Menu) */}
+          {activeTab === 'explore' && (
+            <motion.div key="explore" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+              <div className="space-y-4">
+                <div className="bg-slate-50 rounded-[2.5rem] p-6 border border-slate-100">
+                   <h4 className="font-black text-slate-800 uppercase text-xs mb-4">Most Popular</h4>
+                   <div className="flex justify-between items-center bg-white p-4 rounded-3xl shadow-sm border border-slate-100">
+                     <div className="flex items-center gap-3">
+                       <span style={{ color: brandColor }} className="p-2 bg-slate-50 rounded-xl"><Scissors size={18}/></span>
+                       <div>
+                         <p className="font-bold text-sm text-slate-800">Full Spa Groom</p>
+                         <p className="text-[10px] text-slate-400 font-bold uppercase">From $65.00</p>
+                       </div>
+                     </div>
+                     <button style={{ backgroundColor: brandColor }} className="text-white text-[10px] font-black px-4 py-2 rounded-xl uppercase">Book</button>
+                   </div>
                 </div>
-              </div>
-              <div className="text-right ml-4">
-                <span style={{ color: brandColor }} className="text-sm font-black whitespace-nowrap">
-                  {service.price}
-                </span>
+
+                {/* LOYALTY CARD - The "Hook" */}
+                <section className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden">
+                  <Star className="absolute -right-4 -top-4 w-24 h-24 text-white/5 rotate-12" />
+                  <h4 className="text-[10px] font-black mb-4 uppercase tracking-[0.2em] text-white/60">Loyalty Rewards</h4>
+                  <div className="flex justify-between mb-2">
+                    {[...Array(6)].map((_, i) => (
+                      <div key={i} className={`w-10 h-10 rounded-full border-2 border-dashed flex items-center justify-center ${i < 4 ? 'bg-sky-500 border-sky-500' : 'border-white/20'}`}>
+                        {i < 4 ? <Star size={16} fill="white" /> : <span className="text-white/20 text-[10px]">{i+1}</span>}
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-sky-400 font-black uppercase mt-4">2 more visits for a FREE wash!</p>
+                </section>
               </div>
             </motion.div>
-          ))}
-        </div>
+          )}
 
-        {/* 3. The Vision (from their website) */}
-        <section 
-          style={{ backgroundColor: brandColor }}
-          className="rounded-[3rem] p-8 text-white relative overflow-hidden shadow-xl"
-        >
-          <Dog className="absolute -bottom-6 -right-6 text-white/10 w-32 h-32" />
-          <h4 className="text-lg font-black mb-4 flex items-center gap-2 tracking-tighter">
-            <CheckCircle2 size={24} /> THE ISLAND DOG VISION
-          </h4>
-          <p className="text-white/90 text-sm leading-relaxed font-medium italic">
-            "A pleasurable bonding experience with your canine companion, affordable convenience with no clean up, and friendly staff to assist you."
-          </p>
-        </section>
+          {/* TAB: PETS (Profiles) */}
+          {activeTab === 'pets' && (
+            <motion.div key="pets" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
+              <div className="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 flex items-center gap-4">
+                <div className="w-16 h-16 bg-slate-200 rounded-3xl overflow-hidden">
+                   <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=200" alt="Pet" className="object-cover h-full" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-black text-slate-800 uppercase tracking-tighter">Fluffy</h4>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Golden Retriever • 3 Years</p>
+                  <div className="flex gap-2 mt-2">
+                    <span className="text-[8px] bg-red-50 text-red-600 px-2 py-1 rounded-lg font-black uppercase">Dryer Nervous</span>
+                  </div>
+                </div>
+              </div>
+              <button className="w-full py-5 border-2 border-dashed border-slate-100 rounded-[2.5rem] text-slate-300 font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2">
+                <PlusCircle size={16} /> Add New Pet Profile
+              </button>
+            </motion.div>
+          )}
+
+          {/* TAB: HISTORY (Rebooking) */}
+          {activeTab === 'history' && (
+            <motion.div key="history" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
+              <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 italic">Last Visit: Jan 12</p>
+                    <h4 className="font-black text-slate-800 uppercase tracking-tighter text-lg">Full Spa Grooming</h4>
+                    <p className="text-[10px] text-slate-500 font-medium">Pet: Fluffy • Groomer: Jessica</p>
+                  </div>
+                  <span style={{ color: brandColor }} className="font-black text-lg">$65</span>
+                </div>
+                <button 
+                  style={{ backgroundColor: `${brandColor}15`, color: brandColor }}
+                  className="w-full py-4 rounded-2xl font-black text-[10px] flex items-center justify-center gap-2 uppercase tracking-[0.2em] active:scale-95 transition-all"
+                >
+                  <RotateCcw size={14} /> Rebook This Service
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+        </AnimatePresence>
       </main>
 
-      {/* 4. Contact Bar with REAL Data */}
-      <nav className="fixed bottom-6 left-6 right-6 z-50">
-        <div className="bg-slate-900/95 backdrop-blur-2xl rounded-[2.5rem] p-3 flex items-center justify-between border border-white/10 shadow-2xl">
-          <a href="tel:8436374235" className="w-14 h-14 flex items-center justify-center text-white/70 hover:text-white transition-colors">
-            <Phone size={24} />
-          </a>
-          
-          <button 
-            onClick={() => window.open('mailto:hello@islanddogpetwash.com?subject=Grooming App Inquiry')}
-            style={{ backgroundColor: brandColor }}
-            className="text-white flex-1 mx-2 py-4 rounded-3xl font-black text-sm tracking-widest shadow-lg active:scale-95 transition-all"
-          >
-            BOOK A WASH
-          </button>
-
-          <a href="https://www.google.com/maps/dir//1964+Ashley+River+Rd+#A" className="w-14 h-14 flex items-center justify-center text-white/70 hover:text-white transition-colors">
-            <MapPin size={24} />
-          </a>
+      {/* 3. NEW NATIVE TAB BAR */}
+      <nav className="fixed bottom-8 left-6 right-6 z-50">
+        <div className="bg-slate-900 shadow-2xl rounded-full p-2 flex justify-between items-center border border-white/10">
+          <NavButton active={activeTab === 'explore'} icon={<ShoppingBag size={20}/>} label="Shop" onClick={() => setActiveTab('explore')} />
+          <NavButton active={activeTab === 'pets'} icon={<Dog size={20}/>} label="Pets" onClick={() => setActiveTab('pets')} />
+          <NavButton active={activeTab === 'history'} icon={<History size={20}/>} label="History" onClick={() => setActiveTab('history')} />
         </div>
       </nav>
     </div>
+  );
+}
+
+// Reusable Sub-component for Navigation
+function NavButton({ active, icon, label, onClick }: any) {
+  return (
+    <button 
+      onClick={onClick} 
+      className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${active ? 'bg-white text-slate-900 shadow-xl' : 'text-slate-500'}`}
+    >
+      {icon}
+      {active && <span className="text-[10px] font-black uppercase tracking-widest leading-none">{label}</span>}
+    </button>
   );
 }
