@@ -101,7 +101,7 @@ export default function NexusAgencyDemo() {
         </div>
       </header>
 
-      // 2. The Service Chart (Professional List View)
+      {// 2. The Service Chart (Professional List View)}
 <main className="p-6">
   <div className="flex justify-between items-end mb-6 px-1">
     <div>
