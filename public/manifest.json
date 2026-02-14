@@ -1,0 +1,16 @@
+{
+  "name": "Barks N Bubbles Grooming",
+  "short_name": "BarksNBubbles",
+  "description": "Premium Pet Grooming in West Ashley, SC",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0ea5e9",
+  "theme_color": "#0ea5e9",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/616/616408.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
