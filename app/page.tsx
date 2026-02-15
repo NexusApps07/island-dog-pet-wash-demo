@@ -1,178 +1,100 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Scissors, Dog, Star, Phone, History, 
-  User, PlusCircle, RotateCcw, Bell, 
-  ArrowUpRight, CheckCircle, X 
-} from 'lucide-react';
 
-export default function FunctionalPremiumApp() {
-  const [activeTab, setActiveTab] = useState('explore');
-  const [bookings, setBookings] = useState<any[]>([]);
-  const [pets, setPets] = useState([{ name: "Fluffy", breed: "Golden Retriever" }]);
-  const [toast, setToast] = useState<string | null>(null);
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
-  const brandColor = process.env.NEXT_PUBLIC_BRAND_COLOR || "#38bdf8";
+// Zero-Dependency Icons
+const IconCalendar = () => <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>;
+const IconHistory = () => <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>;
+const IconPaw = () => <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.25 15.25a4.5 4.5 0 01-6.5 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" /></svg>;
 
-  // LOAD DATA ON START
+export default function Home() {
+  const [dna, setDna] = useState({ name: "Nexus Local", city: "Service Area" });
+
   useEffect(() => {
-    const savedBookings = localStorage.getItem('nexus_bookings');
-    if (savedBookings) setBookings(JSON.parse(savedBookings));
+    // Client-side hydration of DNA to prevent Server/Client mismatch
+    setDna({
+      name: process.env.NEXT_PUBLIC_BUSINESS_NAME || "Nexus Local",
+      city: process.env.NEXT_PUBLIC_BUSINESS_CITY || "Service Area"
+    });
   }, []);
 
-  // FUNCTION: HANDLE BOOKING
-  const handleBooking = (service: string, price: string) => {
-    const newBooking = {
-      id: Math.random().toString(36).substr(2, 9),
-      service,
-      price,
-      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      status: 'Confirmed'
-    };
-    
-    const updated = [newBooking, ...bookings];
-    setBookings(updated);
-    localStorage.setItem('nexus_bookings', JSON.stringify(updated));
-    
-    setToast(`Booked: ${service}! Check your Vault.`);
-    setTimeout(() => setToast(null), 3000);
-  };
+  const features = [
+    { id: 'book', title: 'Experience', sub: 'Book Appointment', icon: <IconCalendar />, color: 'from-blue-600/20 to-cyan-500/20', border: 'border-blue-500/30' },
+    { id: 'vault', title: 'The Vault', sub: 'Booking History', icon: <IconHistory />, color: 'from-emerald-600/20 to-teal-500/20', border: 'border-emerald-500/30' },
+    { id: 'family', title: 'Family', sub: 'Pet Profiles', icon: <IconPaw />, color: 'from-violet-600/20 to-fuchsia-500/20', border: 'border-violet-500/30' },
+  ];
 
   return (
-    <div className="max-w-md mx-auto min-h-screen pb-36 relative bg-neutral-950 overflow-hidden font-sans">
+    <div className="flex-1 flex flex-col p-6 relative overflow-hidden">
       
-      {/* 1. FUNCTIONAL TOAST NOTIFICATION */}
-      <AnimatePresence>
-        {toast && (
-          <motion.div 
-            initial={{ y: -50, opacity: 0 }} animate={{ y: 20, opacity: 1 }} exit={{ y: -50, opacity: 0 }}
-            className="fixed top-0 left-6 right-6 z-[100] bg-white text-black p-4 rounded-2xl shadow-2xl flex items-center justify-between"
-          >
-            <div className="flex items-center gap-3">
-              <CheckCircle size={18} className="text-green-500" />
-              <p className="text-xs font-bold uppercase tracking-tight">{toast}</p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <header className="px-8 pt-16 pb-8 flex justify-between items-center relative z-10">
-        <div>
-          <h1 className="text-3xl font-medium tracking-tight text-white leading-none capitalize">{activeTab}</h1>
-          <p className="text-neutral-500 text-[10px] font-bold uppercase tracking-[0.3em] mt-3">Nexus Client Portal</p>
+      {/* Header Section */}
+      <motion.header 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mt-10 mb-12"
+      >
+        <div className="flex items-center gap-2 mb-3">
+          <span className="relative flex h-3 w-3">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+          </span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-500">System Online</span>
         </div>
-      </header>
+        
+        <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-gray-500 tracking-tight">
+          {dna.name}
+        </h1>
+        <p className="text-gray-400 mt-2 font-medium flex items-center gap-2">
+          <span className="opacity-50">📍</span> {dna.city}
+        </p>
+      </motion.header>
 
-      <main className="px-6 relative z-10">
-        <AnimatePresence mode="wait">
-          
-          {/* TAB: EXPLORE (Service Booking) */}
-          {activeTab === 'explore' && (
-            <motion.div key="explore" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-              <div className="bg-neutral-900/50 border border-white/5 p-6 rounded-[2rem]">
-                <h2 className="text-lg font-medium text-white mb-6 italic">Signature Services</h2>
-                <div className="space-y-3">
-                  <ServiceItem 
-                    title="Full Spa Groom" price="$65" 
-                    onBook={() => handleBooking("Full Spa Groom", "$65")} 
-                    color={brandColor} 
-                  />
-                  <ServiceItem 
-                    title="Self-Wash Session" price="$20" 
-                    onBook={() => handleBooking("Self-Wash Session", "$20")} 
-                    color={brandColor} 
-                  />
+      {/* Interactive Grid */}
+      <section className="flex-1 flex flex-col gap-5">
+        {features.map((item, i) => (
+          <motion.div
+            key={item.id}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.15 }}
+          >
+            <button className={`w-full group relative overflow-hidden rounded-2xl border ${item.border} bg-[#121212] p-1 transition-all active:scale-95`}>
+              <div className={`absolute inset-0 bg-gradient-to-r ${item.color} opacity-0 transition-opacity duration-500 group-hover:opacity-100`} />
+              
+              <div className="relative z-10 flex items-center justify-between bg-[#121212]/90 rounded-xl p-5 backdrop-blur-sm">
+                <div className="flex items-center gap-4">
+                  <div className={`p-3 rounded-lg bg-white/5 text-gray-300 group-hover:text-white transition-colors`}>
+                    {item.icon}
+                  </div>
+                  <div className="text-left">
+                    <h2 className="text-lg font-bold text-gray-100">{item.title}</h2>
+                    <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{item.sub}</p>
+                  </div>
+                </div>
+                
+                <div className="text-gray-600 group-hover:text-white transition-colors">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </div>
               </div>
-            </motion.div>
-          )}
+            </button>
+          </motion.div>
+        ))}
+      </section>
 
-          {/* TAB: VAULT (Booking History) */}
-          {activeTab === 'history' && (
-            <motion.div key="history" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
-              {bookings.length === 0 ? (
-                <div className="text-center py-20">
-                  <History size={48} className="mx-auto text-neutral-800 mb-4" />
-                  <p className="text-neutral-500 text-sm">No past appointments found.</p>
-                </div>
-              ) : (
-                bookings.map((b) => (
-                  <div key={b.id} className="bg-neutral-900/80 border border-white/5 p-6 rounded-[2rem] flex justify-between items-center">
-                    <div>
-                      <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-1">{b.date}</p>
-                      <h4 className="text-white font-medium">{b.service}</h4>
-                    </div>
-                    <button 
-                      onClick={() => handleBooking(b.service, b.price)}
-                      className="p-3 bg-neutral-800 rounded-xl text-neutral-400 hover:text-white transition-colors"
-                    >
-                      <RotateCcw size={16} />
-                    </button>
-                  </div>
-                ))
-              )}
-            </motion.div>
-          )}
-
-          {/* TAB: PROFILE (Pets) */}
-          {activeTab === 'pets' && (
-            <motion.div key="pets" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
-              {pets.map((pet, i) => (
-                <div key={i} className="bg-neutral-900/50 border border-white/5 p-5 rounded-3xl flex items-center gap-4">
-                  <div className="w-12 h-12 bg-neutral-800 rounded-xl flex items-center justify-center text-neutral-500 font-bold uppercase">
-                    {pet.name[0]}
-                  </div>
-                  <div>
-                    <h4 className="text-white font-medium">{pet.name}</h4>
-                    <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest">{pet.breed}</p>
-                  </div>
-                </div>
-              ))}
-              <button className="w-full py-5 border border-dashed border-neutral-800 rounded-3xl text-neutral-600 font-bold text-[10px] uppercase tracking-widest flex items-center justify-center gap-2">
-                <PlusCircle size={16} /> Add New Pet Profile
-              </button>
-            </motion.div>
-          )}
-
-        </AnimatePresence>
-      </main>
-
-      {/* NAVIGATION */}
-      <nav className="fixed bottom-10 left-8 right-8 z-50">
-        <div className="bg-neutral-900/90 backdrop-blur-2xl border border-white/10 rounded-full p-2 flex justify-between items-center shadow-2xl">
-          <NavBtn active={activeTab === 'explore'} icon={<PlusCircle size={20}/>} label="Book" onClick={() => setActiveTab('explore')} />
-          <NavBtn active={activeTab === 'history'} icon={<History size={20}/>} label="Vault" onClick={() => setActiveTab('history')} />
-          <NavBtn active={activeTab === 'pets'} icon={<User size={20}/>} label="Pets" onClick={() => setActiveTab('pets')} />
-        </div>
-      </nav>
-    </div>
-  );
-}
-
-function ServiceItem({ title, price, onBook, color }: any) {
-  return (
-    <div className="flex justify-between items-center p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all group">
-      <div>
-        <h4 className="text-white text-sm font-medium">{title}</h4>
-        <p className="text-neutral-500 text-[10px] font-bold uppercase">{price}</p>
-      </div>
-      <button 
-        onClick={onBook}
-        style={{ backgroundColor: color }}
-        className="px-4 py-2 rounded-xl text-black text-[10px] font-black uppercase tracking-widest active:scale-90 transition-all"
+      {/* Footer */}
+      <motion.footer 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8 }}
+        className="mt-auto pt-10 pb-4 text-center"
       >
-        Book Now
-      </button>
+        <p className="text-[10px] text-gray-700 uppercase tracking-widest font-semibold">
+          Nexus Factory v2.0
+        </p>
+      </motion.footer>
     </div>
-  );
-}
-
-function NavBtn({ active, icon, label, onClick }: any) {
-  return (
-    <button onClick={onClick} className={`flex items-center gap-2 px-6 py-4 rounded-full transition-all duration-300 ${active ? 'bg-white text-black' : 'text-neutral-500'}`}>
-      {icon}
-      {active && <span className="text-[10px] font-bold uppercase tracking-widest leading-none">{label}</span>}
-    </button>
   );
 }
